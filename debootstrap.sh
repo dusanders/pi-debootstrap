@@ -51,7 +51,7 @@ function GetVars()
 	QEMU_BINARY=$(./${CONFIG_SCRIPT} QEMU_BINARY) || Exit "Failed to parse qemu binary"
 	QEMU_HOST_PARENT=$(./${CONFIG_SCRIPT} QEMU_HOST_PARENT) || Exit "Failed to parse qemu path"
 	CHROOT_SCRIPT=$(./${CONFIG_SCRIPT} CHROOT_SCRIPT) || Exit "Failed to parse chroot script"
-	CHROOT_SCRIPT_PARENT=$(./${CONFIG_SCRIPT} SCHROOT_SCRIPT_PARENT) || Exit "Failed to parse chroot script path"
+	CHROOT_SCRIPT_PARENT=$(./${CONFIG_SCRIPT} CHROOT_SCRIPT_PARENT) || Exit "Failed to parse chroot script path"
 	OVERLAY_DIR=$(./${CONFIG_SCRIPT} OVERLAY_DIR) || Exit "Failed to parse overlay directory"
 	PRESECONDARY_OVERLAY=$(./${CONFIG_SCRIPT} PRESECONDARY_OVERLAY) || Exit "Failed to parse presecondary overlay directory"
 	QEMU_HOST_PATH="${QEMU_HOST_PARENT}/${QEMU_BINARY}"

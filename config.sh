@@ -67,7 +67,7 @@ CHROOT_SCRIPT_PARENT=""
 OVERLAY_DIR=""
 
 # Path to overlay applied before running chroot script
-#PRESECONDARY_OVERLAY="/home/mate/RaspiKernel/stretch-armhf/repair-overlay"
+#PRESECONDARY_OVERLAY=""
 
 
 

@@ -64,7 +64,7 @@ CHROOT_SCRIPT="additional-packages.sh"
 CHROOT_SCRIPT_PARENT="${BASE}/chroot-scripts"
 
 # Path to overlay directory to apply to rootfs
-OVERLAY_DIR=""
+OVERLAY_DIR="${BASE}/overlay"
 
 # Path to overlay applied before running chroot script
 PRESECONDARY_OVERLAY=""

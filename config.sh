@@ -64,7 +64,7 @@ CHROOT_SCRIPT=""
 CHROOT_SCRIPT_PARENT=""
 
 # Path to overlay directory to apply to rootfs
-OVERLAY_DIR=""
+OVERLAY_DIR="${BASE}/overlay"
 
 # Path to overlay applied before running chroot script
 PRESECONDARY_OVERLAY=""

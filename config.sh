@@ -67,7 +67,7 @@ CHROOT_SCRIPT_PARENT=""
 OVERLAY_DIR=""
 
 # Path to overlay applied before running chroot script
-#PRESECONDARY_OVERLAY=""
+PRESECONDARY_OVERLAY=""
 
 
 

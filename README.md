@@ -34,3 +34,13 @@ This script contains the values used by the debootstrap.sh and install.sh script
 - CHROOT_SCRIPT_PARENT : The path to the directory which contains the script that will be run within the chroot environment.
 - OVERLAY_DIR : The path to the directory which is to be copied over the rootfs after the debootstrap process completes.
 - PRESECONDARY_OVERLAY : The path to the directory which is to be copied over the rootfs after the debootstrap secondary stage and before running the chroot script. So this will be copied over a completed debootstrap process but before the chroot environment is setup and the custom script run.
+
+# Additional notes
+The debootstrap process does not install required kernel, boot, and firmware files. These files should be placed in the overlay directory that is applied to the rootfs.
+- Example
+        
+        ../overlay/boot/ : Contains the kernel.img, bootcode.bin, etc for the boot process 
+        ../overlay/lib/modules/<kernel version>/ : Contains all the required kernel modules needed for the board
+        ../overlay/opt/ : Contains the required user-space drivers needed for the board
+
+The install process will copy the /boot/ files from the rootfs into the boot parition. This directory should contain all needed files for the boot process; kernel.img, bootcode.bin, etc.

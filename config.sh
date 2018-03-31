@@ -67,7 +67,7 @@ CHROOT_SCRIPT_PARENT=""
 OVERLAY_DIR="${BASE}/overlay"
 
 # Path to overlay applied before running chroot script
-PRESECONDARY_OVERLAY=""
+#PRESECONDARY_OVERLAY="/home/mate/RaspiKernel/stretch-armhf/repair-overlay"
 
 
 
@@ -124,6 +124,12 @@ case ${REQUESTED_VALUE} in
 	;;
 "QEMU_HOST_PARENT")
 	echo "${QEMU_HOST_PARENT}"
+	;;
+"CHROOT_SCRIPT")
+	echo "${CHROOT_SCRIPT}"
+	;;
+"CHROOT_SCRIPT_PARENT")
+	echo "${CHROOT_SCRIPT_PARENT}"
 	;;
 "OVERLAY_DIR")
 	echo "${OVERLAY_DIR}"

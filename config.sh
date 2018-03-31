@@ -58,10 +58,10 @@ QEMU_BINARY="qemu-arm-static"
 QEMU_HOST_PARENT="/usr/bin"
 
 # Filename of script to run within chroot environment
-CHROOT_SCRIPT=""
+CHROOT_SCRIPT="additional-packages.sh"
 
 # Parent path to chroot script
-CHROOT_SCRIPT_PARENT=""
+CHROOT_SCRIPT_PARENT="${BASE}/chroot-scripts"
 
 # Path to overlay directory to apply to rootfs
 OVERLAY_DIR=""

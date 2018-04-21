@@ -34,7 +34,7 @@ ROOTFS_DISK_LABEL="ROOTFS"
 DEBOOTSTRAP="${BASE}/stretch"
 
 # Filename to use when zipping rootfs into tar
-DEBOOTSTRAP_TAR="${DEBOOTSTRAP}-armel.tar.gz"
+DEBOOTSTRAP_TAR="${DEBOOTSTRAP}-armhf.tar.gz"
 
 # Options to pass to debootstrap process
 DEBOOTSTRAP_OPTIONS="--foreign"
@@ -46,7 +46,7 @@ PACKAGE_REPO="http://ftp.us.debian.org/debian"
 DISTRO="stretch"
 
 # Arch to use
-ARCH="armel"
+ARCH="armhf"
 
 
 ############ HOST VALUES #######################
@@ -60,16 +60,17 @@ QEMU_HOST_PARENT="/usr/bin"
 # Filename of script to run within chroot environment
 CHROOT_SCRIPT="additional-packages.sh"
 
+# Filename of the script to run after overlay is applied
+SETUP_SCRIPT="setup-rootfs.sh"
+
 # Parent path to chroot script
 CHROOT_SCRIPT_PARENT="${BASE}/chroot-scripts"
 
+# Parent path to setup script
+SETUP_SCRIPT_PARENT="${BASE}/chroot-scripts"
+
 # Path to overlay directory to apply to rootfs
 OVERLAY_DIR="${BASE}/overlay"
-
-# Path to overlay applied before running chroot script
-#PRESECONDARY_OVERLAY=""
-
-
 
 ########################################################################
 
@@ -130,6 +131,12 @@ case ${REQUESTED_VALUE} in
 	;;
 "CHROOT_SCRIPT_PARENT")
 	echo "${CHROOT_SCRIPT_PARENT}"
+	;;
+"SETUP_SCRIPT")
+	echo "${SETUP_SCRIPT}"
+	;;
+"SETUP_SCRIPT_PARENT")
+	echo "${SETUP_SCRIPT_PARENT}"
 	;;
 "OVERLAY_DIR")
 	echo "${OVERLAY_DIR}"

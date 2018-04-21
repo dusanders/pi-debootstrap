@@ -52,10 +52,13 @@ function GetVars()
 	QEMU_HOST_PARENT=$(./${CONFIG_SCRIPT} QEMU_HOST_PARENT) || Exit "Failed to parse qemu path"
 	CHROOT_SCRIPT=$(./${CONFIG_SCRIPT} CHROOT_SCRIPT) || Exit "Failed to parse chroot script"
 	CHROOT_SCRIPT_PARENT=$(./${CONFIG_SCRIPT} CHROOT_SCRIPT_PARENT) || Exit "Failed to parse chroot script path"
+	SETUP_SCRIPT=$(./${CONFIG_SCRIPT} SETUP_SCRIPT) || Exit "Failed to parse setup script"
+	SETUP_SCRIPT_PARENT=$(./${CONFIG_SCRIPT} SETUP_SCRIPT_PARENT) || Exit "Failed to parse setup script path"
 	OVERLAY_DIR=$(./${CONFIG_SCRIPT} OVERLAY_DIR) || Exit "Failed to parse overlay directory"
 	PRESECONDARY_OVERLAY=$(./${CONFIG_SCRIPT} PRESECONDARY_OVERLAY) || Exit "Failed to parse presecondary overlay directory"
 	QEMU_HOST_PATH="${QEMU_HOST_PARENT}/${QEMU_BINARY}"
 	CHROOT_SCRIPT_PATH="${CHROOT_SCRIPT_PARENT}/${CHROOT_SCRIPT}"
+	SETUP_SCRIPT_PATH="${SETUP_SCRIPT_PARENT}/${SETUP_SCRIPT}"
 }
 
 ##
@@ -130,27 +133,11 @@ function SetupChrootEnvironment()
 ##	chroot. 
 ##
 function RunDebootstrapSecondary()
-{
-	# Open local vars for the password input
-	local user=$(whoami)
-	local password=""
-	
-	# Prompt user for desired password
-	Print "Question" "Enter password for new root"
-	read password
-	
-	# Create the password file and copy into chroot rootfs
-	sudo touch "${DEBOOTSTRAP}/pass"
-	sudo chown ${user}:${user} "${DEBOOTSTRAP}/pass"
-	sudo echo "root:${password}" > "${DEBOOTSTRAP}/pass"
-	
+{	
 	# Enter chroot - run secondary and set password
 	sudo chroot "${DEBOOTSTRAP}" << EOF
 /debootstrap/debootstrap --second-stage
-chpasswd </pass
 EOF
-	# Remove password file
-	sudo rm "${DEBOOTSTRAP}/pass"
 	# Remove the debootstrap binary from rootfs
 	sudo rm "${DEBOOTSTRAP}/debootstrap/debootstrap"
 }
@@ -188,6 +175,28 @@ exit
 EOF
 	# Remove the script from rootfs
 	sudo rm "${DEBOOTSTRAP}/${CHROOT_SCRIPT}"
+	# Notify user
+	Print "Info" "Done with chroot"
+}
+
+##
+## Function to execute the chroot script within rootfs
+##
+function ExecuteSetupScript()
+{
+	# Notify user and copy the script into rootfs
+	Print "Info" "Copy setup script..."
+	sudo cp -a "${SETUP_SCRIPT_PATH}" "${DEBOOTSTRAP}" || Exit "Failed to copy setup script: ${SETUP_SCRIPT_PATH}"
+	
+	# Notify user and enter chroot - execute script
+	Print "Info" "Executing setup script"
+	cat << EOF | sudo chroot "${DEBOOTSTRAP}" || Exit "Failed to execute setup script"
+chmod +x ${SETUP_SCRIPT}
+./${SETUP_SCRIPT}
+exit
+EOF
+	# Remove the script from rootfs
+	sudo rm "${DEBOOTSTRAP}/${SETUP_SCRIPT}"
 	# Notify user
 	Print "Info" "Done with chroot"
 }
@@ -284,12 +293,18 @@ if (( ${#CHROOT_SCRIPT} > 0 )); then
 	ExecuteChrootScript
 fi
 
-EndChrootEnvironment
-
 # Check if we have an overlay directory - apply if we do
 if (( ${#OVERLAY_DIR} > 0 ));then
 	CopyOverlay
 fi
+
+# Check for an additional chroot script to run
+if (( ${#SETUP_SCRIPT} > 0 )); then
+	# Notify and run chroot script
+	ExecuteSetupScript
+fi
+
+EndChrootEnvironment
 
 # Determine if user wishes to tar debootstrap
 ReadUserBool "Create tar of debootstrap?"

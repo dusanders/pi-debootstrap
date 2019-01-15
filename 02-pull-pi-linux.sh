@@ -10,24 +10,26 @@
 ##	Usage: ./02-pull-pi-linux.sh
 #######################################################################
 
-# Set git values for the cross compiler tools
-CROSS_COMPILER_GIT="https://github.com/raspberrypi/tools.git"
-CROSS_COMPILER_GIT_DEPTH=1
-CROSS_COMPILER_DEST=$(pwd)
-
-# Set the git values for the firmware
-FIRMWARE_GIT="https://github.com/raspberrypi/firmware.git"
-FIRMWARE_GIT_DEPTH=1
-FIRMWARE_DEST=$(pwd)
-
-# Set the git values for the kernel source
-KERNEL_GIT="https://github.com/raspberrypi/linux.git"
-KERNEL_GIT_DEPTH=1
-KERNEL_DEST=$(pwd)
-
+# Configuration script
+CONFIG_SCRIPT="config.sh"
 
 #######################################################################
 
+##
+## Function to set the variables from the configuration script
+## 
+function GetVars(){
+	if [ -! -e "${CONFIG_SCRIPT}" ]; then
+		Exit "Failed to find config script - Exiting..."
+	fi
+	KERNEL_SOURCES=$(./${CONFIG_SCRIPT} KERNEL_SOURCES) || Exit "Failed to get kernel source directory"
+	CROSS_COMPILER_GIT=$(./${CONFIG_SCRIPT} CROSS_COMPILER_GIT) || Exit "Failed to get cross compiler git"
+	CROSS_COMPILER_GIT_DEPTH=$(./${CONFIG_SCRIPT} CROSS_COMPILER_GIT_DEPTH) || Exit "Failed to get cross compiler git depth"
+	FIRMWARE_GIT=$(./${CONFIG_SCRIPT} FIRMWARE_GIT) || Exit "Failed to get firmware git"
+	FIRMWARE_GIT_DEPTH=$(./${CONFIG_SCRIPT} FIRMWARE_GIT_DEPTH) || Exit "Failed to get firmware git depth"
+	KERNEL_GIT=$(./${CONFIG_SCRIPT} KERNEL_GIT) || Exit "Failed to get kernel git"
+	KERNEL_GIT_DEPTH=$(./${CONFIG_SCRIPT} KERNEL_GIT_DEPTH) || Exit "Failed to get kernel git depth"
+}
 
 ##
 ## Function to display a 'tag' and message to user
@@ -60,31 +62,21 @@ function Exit()
 
 
 # Ensure our directories
-if [ ! -d "${CROSS_COMPILER_DEST}" ]; then
-	mkdir -p "${CROSS_COMPILER_DEST}"
+if [ ! -d "${KERNEL_SOURCE}" ]; then
+	mkdir -p "${KERNEL_SOURCE}"
 fi
-if [ ! -d "${FIRMWARE_DEST}" ]; then
-	mkdir -p "${FIRMWARE_DEST}"
-fi
-if [ ! -d "${KERNEL_DEST}" ]; then
-	mkdir -p "${KERNEL_DEST}"
-fi
+cd "${KERNEL_SOURCE}"
 
-
-# Pull the repos
-cd "${CROSS_COMPILER_DEST}"
 git clone "${CROSS_COMPILER_GIT}" --depth=${CROSS_COMPILER_GIT_DEPTH}
 if [ $? -ne 0 ]; then
 	Exit "Failed to clone cross compiler tools"
 fi
 
-cd "${FIRMWARE_DEST}"
 git clone "${FIRMWARE_GIT}" --depth=${FIRMWARE_GIT_DEPTH}
 if [ $? -ne 0 ]; then
 	Exit "Failed to clone firmware"
 fi
 
-cd "${KERNEL_DEST}"
 git clone "${KERNEL_GIT}" --depth=${KERNEL_GIT_DEPTH}
 if [ $? -ne 0 ]; then
 	Exit "Failed to clone kernel"

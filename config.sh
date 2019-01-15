@@ -10,10 +10,27 @@
 # Get the script location
 BASE=$(pwd)
 
-########### INSTALL VALUES ###################
+########## DEBOOTSTRAP VALUES ################
 
-# Temp directory to use during install
-TMP="${BASE}/stretch-rootfs"
+# Target distro
+DISTRO="stretch"
+
+# Arch to use
+ARCH="armel"
+
+# Directory to place debootstrap rootfs in
+DEBOOTSTRAP="${BASE}/stretch"
+
+# Filename to use when zipping rootfs into tar
+DEBOOTSTRAP_TAR="${DEBOOTSTRAP}-${ARCH}.tar.gz"
+
+# Options to pass to debootstrap process
+DEBOOTSTRAP_OPTIONS="--foreign"
+
+# Package repository  to use
+PACKAGE_REPO="http://ftp.us.debian.org/debian"
+
+########### INSTALL VALUES ###################
 
 # Mount point to use for boot partition
 BOOT_PARTITION_MOUNT="/mnt/boot"
@@ -27,27 +44,8 @@ BOOT_DISK_LABEL="BOOT"
 # Label to use for rootfs
 ROOTFS_DISK_LABEL="ROOTFS"
 
-
-########## DEBOOTSTRAP VALUES ################
-
-# Directory to place debootstrap rootfs in
-DEBOOTSTRAP="${BASE}/stretch"
-
-# Filename to use when zipping rootfs into tar
-DEBOOTSTRAP_TAR="${DEBOOTSTRAP}-armel.tar.gz"
-
-# Options to pass to debootstrap process
-DEBOOTSTRAP_OPTIONS="--foreign"
-
-# Package repository  to use
-PACKAGE_REPO="http://ftp.us.debian.org/debian"
-
-# Target distro
-DISTRO="stretch"
-
-# Arch to use
-ARCH="armel"
-
+# Temp directory to use during install
+TMP="${BASE}/${DISTRO}-tmp"
 
 ############ HOST VALUES #######################
 
@@ -57,19 +55,11 @@ QEMU_BINARY="qemu-arm-static"
 # Host's qemu binary containing path
 QEMU_HOST_PARENT="/usr/bin"
 
-# Filename of script to run within chroot environment
-CHROOT_SCRIPT=""
-
-# Parent path to chroot script
-CHROOT_SCRIPT_PARENT=""
+# Path of script to run within chroot environment
+CHROOT_SCRIPT="./chroot-script.sh"
 
 # Path to overlay directory to apply to rootfs
 OVERLAY_DIR="${BASE}/overlay"
-
-# Path to overlay applied before running chroot script
-#PRESECONDARY_OVERLAY=""
-
-
 
 ########################################################################
 

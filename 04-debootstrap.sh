@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #######################################################################
-##	Script: debootstrap.sh
+##	Script: 04-debootstrap.sh
 ##	Desc: Used to prepare a minimum useable rootfs via the 'deboostrap'
 ##			package from Debian.
-##	Usage: ./debootstrap.sh
+##	Usage: ./04-debootstrap.sh
 #######################################################################
 
 #######################################################

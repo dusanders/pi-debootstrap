@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #######################################################################
-##	Script: prereq.sh
+##	Script: 01-prereq.sh
 ##	Desc: Used to prepare the host machine with needed packages for
 ##			the debootstrap process. 
-##	Usage: ./prereq.sh
+##	Usage: ./01-prereq.sh
 #######################################################################
 
 
@@ -23,6 +23,7 @@ function Print() {
 
 Print "Info" "Installing prereq packages..."
 
+sudo apt-get install git bc
 sudo apt-get install debootstrap
 sudo apt-get install qemu-user-static
 

@@ -1,9 +1,9 @@
 #!/bin/bash
 
 #######################################################################
-##	Script: install.sh
+##	Script: 05-install.sh
 ##	Desc: Used to flash the sdcard with the debootstrapped rootfs 
-##	Usage: ./install.sh <SD Card block device>
+##	Usage: ./05-install.sh <SD Card block device>
 #######################################################################
 
 #######################################################

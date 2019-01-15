@@ -211,6 +211,10 @@ case ${REQUESTED_VALUE} in
 	echo "${FIRMWARE_GIT_DEPTH}"
 	exit 0
 	;;
+"KERNEL_SOURCES")
+	echo "${KERNEL_SOURCES}"
+	exit 0
+	;;
 "KERNEL_DEST")
 	echo "${KERNEL_DEST}"
 	exit 0

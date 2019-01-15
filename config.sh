@@ -79,6 +79,12 @@ KERNEL_ARG=$PI1_ARG
 # Defconfig to use
 DEFCONFIG=$PI1_DEFCONFIG
 
+# Compiler 'j' option
+J_OPTION=4
+
+# Arch type
+ARCH_TYPE=arm
+
 # Subdirectory for kernel/cross compile tools
 KERNEL_SOURCES="${BASE}/sources/"
 
@@ -87,6 +93,7 @@ CROSS_COMPILER_REPO_NAME="tools"
 CROSS_COMPILER_GIT="https://github.com/raspberrypi/${CROSS_COMPILER_REPO_NAME}.git"
 CROSS_COMPILER_GIT_DEPTH=1
 CROSS_COMPILER_DEST="${KERNEL_SOURCES}/${CROSS_COMPILER_REPO_NAME}"
+CROSS_COMPILE_PREFIX="${CROSS_COMPILER_DEST}/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf-"
 
 # Set the git values for the firmware
 FIRMWARE_REPO_NAME="firmware"
@@ -222,6 +229,18 @@ case ${REQUESTED_VALUE} in
 	;;
 "DEFCONFIG")
 	echo "${DEFCONFIG}"
+	exit 0
+	;;
+"J_OPTION")
+	echo "${J_OPTION}"
+	exit 0
+	;;
+"CROSS_COMPILE_PREFIX")
+	echo "${CROSS_COMPILE_PREFIX}"
+	exit 0
+	;;
+"ARCH_TYPE")
+	echo "${ARCH_TYPE}"
 	exit 0
 	;;
 esac

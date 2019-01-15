@@ -59,13 +59,14 @@ function Exit()
 	exit 1
 }
 
-
+# Setup the variables
+GetVars
 
 # Ensure our directories
-if [ ! -d "${KERNEL_SOURCE}" ]; then
-	mkdir -p "${KERNEL_SOURCE}"
+if [ ! -d "${KERNEL_SOURCES}" ]; then
+	mkdir -p "${KERNEL_SOURCES}"
 fi
-cd "${KERNEL_SOURCE}"
+cd "${KERNEL_SOURCES}"
 
 git clone "${CROSS_COMPILER_GIT}" --depth=${CROSS_COMPILER_GIT_DEPTH}
 if [ $? -ne 0 ]; then

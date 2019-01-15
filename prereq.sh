@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #######################################################################
 ##	Script: prereq.sh
@@ -13,8 +13,7 @@
 ## Arguments : $1 - Tag value to display
 ##			   $2 - Message to display
 ##
-function Print()
-{
+function Print() {
 	echo ""
 	echo "##########################################"
 	echo "##   $1    :   $2"

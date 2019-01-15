@@ -1,13 +1,13 @@
 #!/bin/bash
 
 #######################################################################
-##	Script: pull-raspbian.sh
+##	Script: pull-pi-linux.sh
 ##	Desc: Used to pull the Raspbian firmware and cross-compile tools.
 ##			This script only pulls the sources, the reader still has
 ##			to compile the kernel and adjust the values in the 
 ##			'config.sh' script to point to the proper firmwares, tools,
 ##			and compiled kernel.
-##	Usage: ./pull-raspbian.sh
+##	Usage: ./pull-pi-linux.sh
 #######################################################################
 
 # Set git values for the cross compiler tools

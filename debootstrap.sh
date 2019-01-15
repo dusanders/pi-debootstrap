@@ -216,17 +216,6 @@ function CopyOverlay()
 	sudo cp -a "${OVERLAY_DIR}"/* "${DEBOOTSTRAP}" || Exit "Failed to copy overlay"
 	Print "Info" "Done applying overlay"
 }
-
-##
-## Function to apply a presecondary overlay.
-##	Raspbian requires tweaking the apt sources.list, we use an overlay to do this
-##
-function CopyPresecondaryFiles()
-{
-	Print "Info" "Applying presecondary overlay..."
-	sudo cp -a "${PRESECONDARY_OVERLAY}"/* "${DEBOOTSTRAP}" || Exit "Failed to copy presecondary overlay"
-	Print "Info" "Done applying presecondary overlay"
-}
 	
 
 #################### SCRIPT LOGIC #####################

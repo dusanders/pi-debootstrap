@@ -124,7 +124,4 @@ case ${REQUESTED_VALUE} in
 "OVERLAY_DIR")
 	echo "${OVERLAY_DIR}"
 	;;
-"PRESECONDARY_OVERLAY")
-	echo "${PRESECONDARY_OVERLAY}"
-	;;
 esac

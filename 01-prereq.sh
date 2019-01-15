@@ -13,7 +13,8 @@
 ## Arguments : $1 - Tag value to display
 ##			   $2 - Message to display
 ##
-function Print() {
+function Print() 
+{
 	echo ""
 	echo "##########################################"
 	echo "##   $1    :   $2"
@@ -23,7 +24,7 @@ function Print() {
 
 Print "Info" "Installing prereq packages..."
 
-sudo apt-get install git bc
+sudo apt-get install git bc bison flex libssl-dev
 sudo apt-get install debootstrap
 sudo apt-get install qemu-user-static
 

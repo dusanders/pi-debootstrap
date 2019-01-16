@@ -7,7 +7,9 @@
 #######################################################################
 
 # Install nano edditor
-apt-get install nano
+apt-get -y --allow-unauthenticated install nano
 
 # Install OpenSSH server
-apt-get install openssh openssh-server
+apt-get -y --allow-unauthenticated install openssh-server
+
+exit 0

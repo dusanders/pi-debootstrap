@@ -51,10 +51,8 @@ function GetVars()
 	QEMU_BINARY=$(./${CONFIG_SCRIPT} QEMU_BINARY) || Exit "Failed to parse qemu binary"
 	QEMU_HOST_PARENT=$(./${CONFIG_SCRIPT} QEMU_HOST_PARENT) || Exit "Failed to parse qemu path"
 	CHROOT_SCRIPT=$(./${CONFIG_SCRIPT} CHROOT_SCRIPT) || Exit "Failed to parse chroot script"
-	CHROOT_SCRIPT_PARENT=$(./${CONFIG_SCRIPT} CHROOT_SCRIPT_PARENT) || Exit "Failed to parse chroot script path"
 	OVERLAY_DIR=$(./${CONFIG_SCRIPT} OVERLAY_DIR) || Exit "Failed to parse overlay directory"
 	QEMU_HOST_PATH="${QEMU_HOST_PARENT}/${QEMU_BINARY}"
-	CHROOT_SCRIPT_PATH="${CHROOT_SCRIPT_PARENT}/${CHROOT_SCRIPT}"
 }
 
 ##
@@ -176,11 +174,11 @@ function ExecuteChrootScript()
 {
 	# Notify user and copy the script into rootfs
 	Print "Info" "Copy chroot script..."
-	sudo cp -a "${CHROOT_SCRIPT_PATH}" "${DEBOOTSTRAP}" || Exit "Failed to copy chroot script: ${CHROOT_SCRIPT_PATH}"
+	sudo cp -a "${CHROOT_SCRIPT}" "${DEBOOTSTRAP}" || Exit "Failed to copy chroot script: ${CHROOT_SCRIPT}"
 	
 	# Notify user and enter chroot - execute script
 	Print "Info" "Executing chroot script"
-	cat << EOF | sudo chroot "${DEBOOTSTRAP}" || Exit "Failed to execute chroot script"
+	cat << EOF | sudo chroot "${DEBOOTSTRAP}"
 chmod +x ${CHROOT_SCRIPT}
 ./${CHROOT_SCRIPT}
 exit
@@ -212,7 +210,9 @@ function CreateDebootstrap()
 function CopyOverlay()
 {
 	Print "Info" "Applying overlay..."
-	sudo cp -a "${OVERLAY_DIR}"/* "${DEBOOTSTRAP}" || Exit "Failed to copy overlay"
+	if [ ! -z $(ls ${OVERLAY_DIR}) ]; then
+		sudo cp -a "${OVERLAY_DIR}"/* "${DEBOOTSTRAP}" || Exit "Failed to copy overlay to: ${DEBOOTSTRAP}"
+	fi
 	Print "Info" "Done applying overlay"
 }
 	

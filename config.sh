@@ -179,10 +179,6 @@ case ${REQUESTED_VALUE} in
 	echo "${CHROOT_SCRIPT}"
 	exit 0
 	;;
-"CHROOT_SCRIPT_PARENT")
-	echo "${CHROOT_SCRIPT_PARENT}"
-	exit 0
-	;;
 "OVERLAY_DIR")
 	echo "${OVERLAY_DIR}"
 	exit 0

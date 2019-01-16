@@ -47,6 +47,12 @@ ROOTFS_DISK_LABEL="ROOTFS"
 # Temp directory to use during install
 TMP="${BASE}/${DISTRO}-tmp"
 
+# Temp directory to use for the boot partition
+BOOT_TMP="${BASE}/BOOT-tmp"
+
+# Temp directory for kernel modules
+MODULES_TMP="${BASE}/MODULES-tmp"
+
 ############ HOST VALUES #######################
 
 # Host's qemu binary file name
@@ -241,6 +247,14 @@ case ${REQUESTED_VALUE} in
 	;;
 "ARCH_TYPE")
 	echo "${ARCH_TYPE}"
+	exit 0
+	;;
+"BOOT_TMP")
+	echo "${BOOT_TMP}"
+	exit 0
+	;;
+"MODULES_TMP")
+	echo "${MODULES_TMP}"
 	exit 0
 	;;
 esac

@@ -41,10 +41,20 @@ function GetVars()
     J_OPTION=$(./${CONFIG_SCRIPT} J_OPTION) || Exit "Failed to get 'j' option"
     ARCH_TYPE=$(./${CONFIG_SCRIPT} ARCH_TYPE) || Exit "Failed to get ARCH type"
     COMPILE_PREFIX=$(./${CONFIG_SCRIPT} CROSS_COMPILE_PREFIX) || Exit "Failed to get cross compile prefix"
+    BOOT_TMP=$(./${CONFIG_SCRIPT} BOOT_TMP) || Exit "Failed to get BOOT temp"
+    MODULES_TMP=$(./${CONFIG_SCRIPT} MODULES_TMP) || Exit "Failed to get TMP directory"
 }
 
 # Setup the variables
 GetVars
+
+# Clean previous build
+if [ -d "${BOOT_TMP}" ]; then
+    sudo rm -rf "${BOOT_TMP}"
+fi
+if [ -d "${MODULES_TMP}" ]; then
+    sudo rm -rf "${MODULES_TMP}"
+fi
 
 # Move to kernel source
 cd "${KERNEL_DEST}"
@@ -55,4 +65,14 @@ KERNEL="${KERNEL_ARG}"
 # Compile the defconfig
 make ARCH=${ARCH_TYPE} CROSS_COMPILE=${COMPILE_PREFIX} "${DEFCONFIG}"
 # Compile evertyhing
-make -j${J_OPTION} ARCH=${ARCH_TYPE} CROSS_COMPILE=${COMPILE_PREFIX} zImage modules dtbs
+sudo make -j${J_OPTION} ARCH=${ARCH_TYPE} CROSS_COMPILE=${COMPILE_PREFIX} zImage modules dtbs
+# Install modules
+mkdir -p "${MODULES_TMP}"
+sudo make ARCH=${ARCH_TYPE} CROSS_COMPILE=${COMPILE_PREFIX} INSTALL_MOD_PATH="${MODULES_TMP}" modules_install
+
+# Copy boot files
+mkdir -p "${BOOT_TMP}/overlays"
+sudo cp arch/${ARCH_TYPE}/boot/zImage "${BOOT_TMP}/${KERNEL_ARG}.img"
+sudo cp arch/${ARCH_TYPE}/boot/dts/*.dtb "${BOOT_TMP}"
+sudo cp arch/${ARCH_TYPE}/boot/dts/overlays/*.dtb* "${BOOT_TMP}/overlays"
+sudo cp arch/${ARCH_TYPE}/boot/dts/overlays/README "${BOOT_TMP}/overlays"

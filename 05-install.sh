@@ -50,6 +50,8 @@ function GetVars()
 	DEBOOTSTRAP_TAR=$(./${CONFIG_SCRIPT} DEBOOTSTRAP_TAR) || Exit "Failed to parse debootstrap tar filename"
 	DEBOOTSTRAP=$(./${CONFIG_SCRIPT} DEBOOTSTRAP) || Exit "Failed to parse debootstrap directory"
 	TMP=$(./${CONFIG_SCRIPT} TMP) || Exit "Failed to parse temp directory"
+	MODULES_TMP=$(./${CONFIG_SCRIPT} MODULES_TMP) || Exit "Failed to get modules temp directory"
+	BOOT_TMP=$(./${CONFIG_SCRIPT} BOOT_TMP) || Exit "Failed to get boot files"
 	BOOT_PARTITION_MOUNT=$(./${CONFIG_SCRIPT} BOOT_PARTITION_MOUNT) || Exit "Failed to parse boot partition mount directory"
 	ROOTFS_PARTITION_MOUNT=$(./${CONFIG_SCRIPT} ROOTFS_PARTITION_MOUNT) || Exit "Failed to parse rootfs partition mount directory"
 	BOOT_DISK_LABEL=$(./${CONFIG_SCRIPT} BOOT_DISK_LABEL) || Exit "Failed to parse boot disk label"
@@ -123,7 +125,7 @@ function MountPartitions()
 ##
 function FormatPartitions()
 {
-	sudo mkfs.vfat -F 32 -n ${BOOT_DISK_LABEL} ${BOOT_BLOCK_DEV}
+	sudo mkfs.msdos -F 32  ${BOOT_BLOCK_DEV} -n ${BOOT_DISK_LABEL}
 	sleep 2
 	sudo sync
 	sudo mkfs.ext4 -b 4096 -L ${ROOTFS_DISK_LABEL} ${ROOTFS_BLOCK_DEV}
@@ -207,8 +209,11 @@ function UseDebootstrap()
 		Exit "No rootfs!"
 	fi
 	
+	# Determine if we have any files in the tmp/previous build
+	TMP_FILE_COUNT=$(ls ${TMP} | wc -l)
+
 	# If we have an existing build - gather user input
-	if (( TMP_FILE_COUNT > 0 )); then
+	if (( $TMP_FILE_COUNT > 0 )); then
 		PromptCleanTmpFiles
 	else
 		Print "Info" "Copy files to temp..."
@@ -235,9 +240,6 @@ fi
 if [ ! -d "${TMP}" ]; then
 	mkdir -p "${TMP}"
 fi
-
-# Determine if we have any files in the tmp/previous build
-TMP_FILE_COUNT=$(ls ${TMP} | wc -l)
 
 # Check if we are using a tar
 if (( ${#DEBOOTSTRAP_TAR} > 0 )); then
@@ -278,12 +280,17 @@ MountPartitions
 
 # Copy the boot files into boot partition
 Print "Info" "Copy boot files to boot partition..."
-sudo cp -r "${TMP}/boot"/* "${BOOT_PARTITION_MOUNT}" || Exit "Failed to copy boot files"
+sudo cp -r "${BOOT_TMP}"/* "${BOOT_PARTITION_MOUNT}" || Exit "Failed to copy boot files"
 sudo sync
 
 # Copy over the rootfs
 Print "Info" "Copy rootfs..."
 sudo cp -a "${TMP}"/* "${ROOTFS_PARTITION_MOUNT}" || Exit "Failed to copy rootfs"
+sudo sync
+
+# Copy over the modules
+Print "Info" "Copy modules..."
+sudo cp -a "${MODULES_TMP}"/* "${ROOTFS_PARTITION_MOUNT}" || Exit "Failed to copy modules"
 sudo sync
 
 Print "Info" "Remove tmp files..."

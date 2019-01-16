@@ -53,7 +53,6 @@ function GetVars()
 	CHROOT_SCRIPT=$(./${CONFIG_SCRIPT} CHROOT_SCRIPT) || Exit "Failed to parse chroot script"
 	CHROOT_SCRIPT_PARENT=$(./${CONFIG_SCRIPT} CHROOT_SCRIPT_PARENT) || Exit "Failed to parse chroot script path"
 	OVERLAY_DIR=$(./${CONFIG_SCRIPT} OVERLAY_DIR) || Exit "Failed to parse overlay directory"
-	PRESECONDARY_OVERLAY=$(./${CONFIG_SCRIPT} PRESECONDARY_OVERLAY) || Exit "Failed to parse presecondary overlay directory"
 	QEMU_HOST_PATH="${QEMU_HOST_PARENT}/${QEMU_BINARY}"
 	CHROOT_SCRIPT_PATH="${CHROOT_SCRIPT_PARENT}/${CHROOT_SCRIPT}"
 }
@@ -260,11 +259,6 @@ SetupChrootEnvironment
 #	- If we don't have binary - assume secondary already ran
 if [ -e "${DEBOOTSTRAP}/debootstrap/debootstrap" ]; then
 	RunDebootstrapSecondary
-fi
-
-# Check if we have a presecondary overlay files directory - apply if we do
-if (( ${#PRESECONDARY_OVERLAY} > 0 ));then
-	CopyPresecondaryFiles
 fi
 
 # Check for an additional chroot script to run

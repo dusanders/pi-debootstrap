@@ -56,7 +56,7 @@ function GetVars()
 	ROOTFS_PARTITION_MOUNT=$(./${CONFIG_SCRIPT} ROOTFS_PARTITION_MOUNT) || Exit "Failed to parse rootfs partition mount directory"
 	BOOT_DISK_LABEL=$(./${CONFIG_SCRIPT} BOOT_DISK_LABEL) || Exit "Failed to parse boot disk label"
 	ROOTFS_DISK_LABEL=$(./${CONFIG_SCRIPT} ROOTFS_DISK_LABEL) || Exit "Failed to parse rootfs disk label"
-	
+	FIRMWARE_DEST=$(./${CONFIG_SCRIPT} FIRMWARE_DEST) || Exit "Failed to get firmware location"
 }
 
 ##
@@ -221,6 +221,29 @@ function UseDebootstrap()
 		CopyToTemp
 	fi
 }
+
+##
+## Function to copy the provided firmware for Raspberry Pi
+##
+function CopyBootFirmware()
+{
+	sudo cp "${FIRMWARE_DEST}/boot/start*.elf" "${BOOT_PARTITION_MOUNT}"
+	sudo cp "${FIRMWARE_DEST}/boot/fixup*.dat" "${BOOT_PARTITION_MOUNT}"
+	sudo cp "${FIRMWARE_DEST}/boot/bootcode.bin" "${BOOT_PARTITION_MOUNT}"
+}
+
+##
+## Function to copy the provided firmware for Raspberry Pi
+##
+function CopyOptionalFirmware()
+{
+	# Ensure directories
+	sudo mkdir -p "${ROOTFS_PARTITION_MOUNT}/hardfp/opt/vc/"
+	sudo mkdir -p "${ROOTFS_PARTITION_MOUNT}/opt/vc/"
+	# Copy the firmware
+	sudo cp -a "${FIRMWARE_DEST}/hardfp/opt/vc"/* "${ROOTFS_PARTITION_MOUNT}/opt/vc/"
+	sudo cp -a "${FIRMWARE_DEST}/opt/vc"/* "${ROOTFS_PARTITION_MOUNT}/opt/vc/"
+}
 	
 	
 
@@ -277,6 +300,12 @@ FormatPartitions
 # Mount the partitions
 Print "Info" "Mounting partitions..."
 MountPartitions
+
+# Copy the boot firmware
+CopyBootFirmware
+
+# Copy the optional firmware
+CopyOptionalFirmware
 
 # Copy the boot files into boot partition
 Print "Info" "Copy boot files to boot partition..."

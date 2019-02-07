@@ -16,7 +16,7 @@ BASE=$(pwd)
 DISTRO="stretch"
 
 # Arch to use
-ARCH="armel"
+ARCH="armhf"
 
 # Directory to place debootstrap rootfs in
 DEBOOTSTRAP="${BASE}/stretch"

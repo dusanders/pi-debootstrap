@@ -15,8 +15,15 @@ BASE=$(pwd)
 # Target distro
 DISTRO="stretch"
 
+# Arch for Pi
+PI_ARCH="armel"
+# Arch for Pi 2
+PI2_ARCH="armhf"
+# Arch for Pi 3
+PI3_ARCH="arm64"
+
 # Arch to use
-ARCH="armhf"
+ARCH="$PI_ARCH"
 
 # Directory to place debootstrap rootfs in
 DEBOOTSTRAP="${BASE}/stretch"
@@ -55,8 +62,15 @@ MODULES_TMP="${BASE}/MODULES-tmp"
 
 ############ HOST VALUES #######################
 
+# QEMU binary for Pi
+PI_QEMU="qemu-arm-static"
+# QEMU binary for Pi2
+PI2_QEMU="qemu-arm-static"
+# QEMU binary for Pi3
+PI3_QEMU="qemu-aarch64-static"
+
 # Host's qemu binary file name
-QEMU_BINARY="qemu-arm-static"
+QEMU_BINARY="$PI_QEMU"
 
 # Host's qemu binary containing path
 QEMU_HOST_PARENT="/usr/bin"

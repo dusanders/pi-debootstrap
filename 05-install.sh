@@ -227,8 +227,8 @@ function UseDebootstrap()
 ##
 function CopyBootFirmware()
 {
-	sudo cp "${FIRMWARE_DEST}/boot/start*.elf" "${BOOT_PARTITION_MOUNT}"
-	sudo cp "${FIRMWARE_DEST}/boot/fixup*.dat" "${BOOT_PARTITION_MOUNT}"
+	sudo cp "${FIRMWARE_DEST}/boot/start"* "${BOOT_PARTITION_MOUNT}"
+	sudo cp "${FIRMWARE_DEST}/boot/fixup"* "${BOOT_PARTITION_MOUNT}"
 	sudo cp "${FIRMWARE_DEST}/boot/bootcode.bin" "${BOOT_PARTITION_MOUNT}"
 }
 

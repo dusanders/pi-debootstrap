@@ -10,15 +10,25 @@
 ## Function to install Node.js
 ##
 function installNode() {
-    # Get the setup script from nodesource
-    curl -sL "https://deb.nodesource.com/setup_11.x" | bash -
-
-    # Install Node.js
-    apt-get install -y nodejs
+    local NODE_TAR="node-v11.9.0-linux-armv6l.tar.xz"
+    local NODE_UNZIP="node-v11.9.0-linux-armv6l"
+    wget "https://nodejs.org/dist/v11.9.0/${NODE_TAR}"
+    echo "Extract ${NODE_TAR}"
+    tar -xf "${NODE_TAR}"
+    echo "Copy files..."
+    cd "${NODE_UNZIP}"
+    cp -a ./* /usr/local
 
     # Print out the version installed
     local node_version=$(node --version)
     echo "Using Node.js version: ${node_version}"
+
+    # Clean up files
+    echo "Clean up temp files..."
+    cd ..
+    rm "${NODE_TAR}"
+    rm -rf "${NODE_UNZIP}"
+    echo "Done with Node.js"
 }
 
 # Install locales

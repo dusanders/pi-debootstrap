@@ -53,6 +53,7 @@ function GetVars()
 	CHROOT_SCRIPT=$(./${CONFIG_SCRIPT} CHROOT_SCRIPT) || Exit "Failed to parse chroot script"
 	OVERLAY_DIR=$(./${CONFIG_SCRIPT} OVERLAY_DIR) || Exit "Failed to parse overlay directory"
 	QEMU_HOST_PATH="${QEMU_HOST_PARENT}/${QEMU_BINARY}"
+	MORE_REPOS=$(./${CONFIG_SCRIPT} MORE_REPOS) || Exit "Failed to get more apt repos"
 }
 
 ##
@@ -215,7 +216,18 @@ function CopyOverlay()
 	fi
 	Print "Info" "Done applying overlay"
 }
-	
+
+##
+## Function to append apt repos to the sources list
+##
+function AppendRepos()
+{
+	Print "Info" "Adding additional APT repositories"
+	echo "$MORE_REPOS" | sudo tee -a "${DEBOOTSTRAP}/etc/apt/sources.list"
+	sudo chroot "${DEBOOTSTRAP}" << EOF
+apt-get update
+EOF
+}
 
 #################### SCRIPT LOGIC #####################
 
@@ -252,14 +264,17 @@ else
 fi
 
 # Notify and setup chroot
-Print "Info" "Starting secondary debootstrap process for ${DISTRO}..."
 SetupChrootEnvironment
 
 # Check if we have a debootstrap binary in rootfs 
 #	- If we don't have binary - assume secondary already ran
 if [ -e "${DEBOOTSTRAP}/debootstrap/debootstrap" ]; then
+	Print "Info" "Starting secondary debootstrap process for ${DISTRO}..."
 	RunDebootstrapSecondary
 fi
+
+# Append any extra apt repos before running chroot script
+AppendRepos
 
 # Check for an additional chroot script to run
 if (( ${#CHROOT_SCRIPT} > 0 )); then

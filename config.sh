@@ -18,7 +18,7 @@ DISTRO="stretch"
 # Arch for Pi
 PI_ARCH="armhf"
 # Arch for Pi 2
-PI2_ARCH="$PI_ARCH"
+PI2_ARCH="armhf"
 # Arch for Pi 3
 PI3_ARCH="arm64"
 
@@ -34,8 +34,21 @@ DEBOOTSTRAP_TAR="${DEBOOTSTRAP}-${ARCH}.tar.gz"
 # Options to pass to debootstrap process
 DEBOOTSTRAP_OPTIONS="--foreign"
 
+# Package repository for Pi 1 & Zero
+PI1_REPO="http://archive.raspbian.org/raspbian"
+
+# Package repository for Pi2 & 3
+PI2_REPO="http://ftp.us.debian.org/debian"
+
 # Package repository  to use
-PACKAGE_REPO="http://archive.raspbian.org/raspbian"
+PACKAGE_REPO="${PI1_REPO}"
+
+# Additional apt repos for Pi1
+PI1_MORE_REPOS="deb http://mirrordirector.raspbian.org/raspbian ${DISTRO} main contrib non-free rpi
+deb http://archive.raspberrypi.org/debian ${DISTRO} main"
+
+# Additional apt repos for debootstrap
+MORE_REPOS="${PI1_MORE_REPOS}"
 
 ########### INSTALL VALUES ###################
 
@@ -269,6 +282,10 @@ case ${REQUESTED_VALUE} in
 	;;
 "MODULES_TMP")
 	echo "${MODULES_TMP}"
+	exit 0
+	;;
+"MORE_REPOS")
+	echo "${MORE_REPOS}"
 	exit 0
 	;;
 esac

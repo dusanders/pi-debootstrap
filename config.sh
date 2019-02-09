@@ -16,9 +16,9 @@ BASE=$(pwd)
 DISTRO="stretch"
 
 # Arch for Pi
-PI_ARCH="armel"
+PI_ARCH="armhf"
 # Arch for Pi 2
-PI2_ARCH="armhf"
+PI2_ARCH="$PI_ARCH"
 # Arch for Pi 3
 PI3_ARCH="arm64"
 
@@ -35,7 +35,7 @@ DEBOOTSTRAP_TAR="${DEBOOTSTRAP}-${ARCH}.tar.gz"
 DEBOOTSTRAP_OPTIONS="--foreign"
 
 # Package repository  to use
-PACKAGE_REPO="http://ftp.us.debian.org/debian"
+PACKAGE_REPO="http://archive.raspbian.org/raspbian"
 
 ########### INSTALL VALUES ###################
 
@@ -85,13 +85,13 @@ OVERLAY_DIR="${BASE}/overlay"
 
 # Kernel argument for Pi 1, Zero, Zero W, and Compute
 #   - specified: https://www.raspberrypi.org/documentation/linux/kernel/building.md
-PI1_ARG=kernel
-PI1_DEFCONFIG=bcmrpi_defconfig
+PI1_ARG="kernel"
+PI1_DEFCONFIG="bcmrpi_defconfig"
 
 # Kernel argument for Pi 2, 3, 3+, Compute 3
 #   - specified: https://www.raspberrypi.org/documentation/linux/kernel/building.md
-PI2=kernel7
-PI2_DEFCONFIG=bcm2709_defconfig
+PI2="kernel7"
+PI2_DEFCONFIG="bcm2709_defconfig"
 
 # Kernel argument to use
 KERNEL_ARG=$PI1_ARG
@@ -100,10 +100,10 @@ KERNEL_ARG=$PI1_ARG
 DEFCONFIG=$PI1_DEFCONFIG
 
 # Compiler 'j' option
-J_OPTION=4
+J_OPTION="4"
 
 # Arch type
-ARCH_TYPE=arm
+ARCH_TYPE="arm"
 
 # Subdirectory for kernel/cross compile tools
 KERNEL_SOURCES="${BASE}/sources/"

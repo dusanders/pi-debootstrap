@@ -150,13 +150,16 @@ EOF
 ##
 function EndChrootEnvironment()
 {
+	# Prompt
+	Print "Info" "Ending chroot environment"
+
 	# Umount the chroot directories
-	sudo umount "${DEBOOTSTRAP}/proc" 2>/dev/null
-	sudo umount "${DEBOOTSTRAP}/dev" 2>/dev/null
-	sudo umount "${DEBOOTSTRAP}/sys" 2>/dev/null
+	sudo umount -l "${DEBOOTSTRAP}/proc" 
+	sudo umount -l "${DEBOOTSTRAP}/dev" 
+	sudo umount -l "${DEBOOTSTRAP}/sys" 
 	
 	# Remove the qemu binary
-	sudo rm "${DEBOOTSTRAP}/usr/bin/${QEMU_BINARY}" 2>/dev/null
+	sudo rm "${DEBOOTSTRAP}/usr/bin/${QEMU_BINARY}"
 }
 
 ##

@@ -52,8 +52,8 @@ function GetVars()
 	QEMU_HOST_PARENT=$(./${CONFIG_SCRIPT} QEMU_HOST_PARENT) || Exit "Failed to parse qemu path"
 	CHROOT_SCRIPT=$(./${CONFIG_SCRIPT} CHROOT_SCRIPT) || Exit "Failed to parse chroot script"
 	OVERLAY_DIR=$(./${CONFIG_SCRIPT} OVERLAY_DIR) || Exit "Failed to parse overlay directory"
+	PASSWORD=$(./${CONFIG_SCRIPT} PASSWORD) || Exit "Failed to get debootstrap root password"
 	QEMU_HOST_PATH="${QEMU_HOST_PARENT}/${QEMU_BINARY}"
-	MORE_REPOS=$(./${CONFIG_SCRIPT} MORE_REPOS) || Exit "Failed to get more apt repos"
 }
 
 ##
@@ -129,18 +129,9 @@ function SetupChrootEnvironment()
 ##
 function RunDebootstrapSecondary()
 {
-	# Open local vars for the password input
-	local user=$(whoami)
-	local password=""
-	
-	# Prompt user for desired password
-	Print "Question" "Enter password for new root"
-	read password
-	
-	# Create the password file and copy into chroot rootfs
+	# Set the password of the root account
 	sudo touch "${DEBOOTSTRAP}/pass"
-	sudo chown ${user}:${user} "${DEBOOTSTRAP}/pass"
-	sudo echo "root:${password}" > "${DEBOOTSTRAP}/pass"
+	echo "root:${PASSWORD}" | sudo tee -a "${DEBOOTSTRAP}/pass"
 	
 	# Enter chroot - run secondary and set password
 	sudo chroot "${DEBOOTSTRAP}" << EOF

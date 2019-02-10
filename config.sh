@@ -12,6 +12,9 @@ BASE=$(pwd)
 
 ########## DEBOOTSTRAP VALUES ################
 
+# Root password
+PASSWORD="root"
+
 # Target distro
 DISTRO="stretch"
 
@@ -284,8 +287,8 @@ case ${REQUESTED_VALUE} in
 	echo "${MODULES_TMP}"
 	exit 0
 	;;
-"MORE_REPOS")
-	echo "${MORE_REPOS}"
+"PASSWORD")
+	echo "${PASSWORD}"
 	exit 0
 	;;
 esac

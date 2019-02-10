@@ -7,64 +7,84 @@
 #######################################################################
 
 ##
+## Function to print a message to console
+##
+function Print()
+{
+    echo ""
+    echo "################ INFO #################"
+    echo ""
+    echo "$1"
+    echo ""
+    echo "######################################"
+    echo ""
+}
+
+##
+## Function to add additional APT repositories. This is for Pi 1 and Zero
+##
+function AddRepos() 
+{
+    # Additional apt repos for Pi 1
+    local additionalRepos="deb http://mirrordirector.raspbian.org/raspbian/ stretch main contrib non-free rpi firmware"
+
+    # Add the repos to the sources.list
+	echo "$additionalRepos" | tee -a "/etc/apt/sources.list"
+
+    # Prompt info
+    local repos=$(cat /etc/apt/sources.list)
+    Print "Using repos: ${repos}"
+
+    # Update apt
+    apt-get update
+}
+
+##
 ## Function to install Node.js
 ##
 function installNode() {
     local NODE_TAR="node-v11.9.0-linux-armv6l.tar.xz"
     local NODE_UNZIP="node-v11.9.0-linux-armv6l"
     wget "https://nodejs.org/dist/v11.9.0/${NODE_TAR}"
-    echo "Extract ${NODE_TAR}"
+    Print "Extract ${NODE_TAR}"
     tar -xf "${NODE_TAR}"
-    echo "Copy files..."
+    Print "Copy files..."
     cd "${NODE_UNZIP}"
     cp -a ./* /usr/local
 
     # Print out the version installed
     local node_version=$(node --version)
-    echo "Using Node.js version: ${node_version}"
+    Print "Using Node.js version: ${node_version}"
 
     # Clean up files
-    echo "Clean up temp files..."
+    Print "Clean up temp files..."
     cd ..
     rm "${NODE_TAR}"
     rm -rf "${NODE_UNZIP}"
-    echo "Done with Node.js"
+    Print "Done with Node.js"
 }
 
-# Install locales
-apt-get -y --allow-unauthenticated install locales
+# Check for enabled en_US
+LOCALE=$(cat /etc/locale.gen | grep -x "en_US.UTF-8 UTF-8")
+if [ -z "${LOCALE}" ]; then
+    
+    Print "Adding en_US locale..."
+    
+    # Add default locale to gen file
+    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+    
+    # Generate the default locale
+    locale-gen en_US.UTF-8
+fi
 
-# Add default locale to gen file
-echo "en_US UTF-8" >> /etc/locale.gen
-
-# Generate the default locale
-locale-gen en_US.UTF-8
-
-# Update apt
-apt-get -y --allow-unauthenticated update
-
-# Install HTTPS transport for apt
-apt-get -y --allow-unauthenticated install apt-transport-https
-
-# Install nano edditor
-apt-get -y --allow-unauthenticated install nano
-
-# Install OpenSSL
-apt-get -y --allow-unauthenticated install openssl
-
-# Install OpenSSH server
-apt-get -y --allow-unauthenticated install openssh-server
-
-# Install curl util
-apt-get -y --allow-unauthenticated install curl
-
-# Install tar xz tools
-apt-get -y --allow-unauthenticated install xz-utils
-
-# Install build tools for Node.js
-apt-get -y --allow-unauthenticated install gcc g++ make
+# Add the raspbian repos
+AddRepos
 
 # Install Node.js
 installNode
 
+# Ensure everything wraps up
+sync 
+
+# Exit
 exit 0

@@ -34,24 +34,20 @@ DEBOOTSTRAP="${BASE}/stretch"
 # Filename to use when zipping rootfs into tar
 DEBOOTSTRAP_TAR="${DEBOOTSTRAP}-${ARCH}.tar.gz"
 
-# Options to pass to debootstrap process
-DEBOOTSTRAP_OPTIONS="--foreign"
+# Additional packages to load into bootstrap
+ADDITIONAL_PACKAGES="locales,dirmngr,git,ca-certificates,apt-transport-https,nano,openssl,openssh-server,curl,xz-utils,wpasupplicant,gcc,g++,make"
+
+# Set the debootstrap options; dont check gpg; include additional packages
+DEBOOTSTRAP_OPTIONS="--foreign --keyring=/etc/apt/trusted.gpg --include=${ADDITIONAL_PACKAGES}"
 
 # Package repository for Pi 1 & Zero
-PI1_REPO="http://archive.raspbian.org/raspbian"
+PI1_REPO="http://mirrordirector.raspbian.org/raspbian"
 
 # Package repository for Pi2 & 3
 PI2_REPO="http://ftp.us.debian.org/debian"
 
 # Package repository  to use
 PACKAGE_REPO="${PI1_REPO}"
-
-# Additional apt repos for Pi1
-PI1_MORE_REPOS="deb http://mirrordirector.raspbian.org/raspbian ${DISTRO} main contrib non-free rpi
-deb http://archive.raspberrypi.org/debian ${DISTRO} main"
-
-# Additional apt repos for debootstrap
-MORE_REPOS="${PI1_MORE_REPOS}"
 
 ########### INSTALL VALUES ###################
 

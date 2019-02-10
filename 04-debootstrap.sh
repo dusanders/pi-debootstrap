@@ -192,7 +192,7 @@ function CreateDebootstrap()
 
 	# Notify and start the initial debootstrap package downloads
 	Print "Info" "Starting debootstrap for ${DISTRO}..."
-	sudo debootstrap --arch "${ARCH}" $DEBOOTSTRAP_OPTIONS "${DISTRO}" "${DEBOOTSTRAP}" "${PACKAGE_REPO}" || Exit "Failed to create deboostrap"
+	sudo debootstrap --arch="${ARCH}" $DEBOOTSTRAP_OPTIONS "${DISTRO}" "${DEBOOTSTRAP}" "${PACKAGE_REPO}" || Exit "Failed to create deboostrap"
 	Print "Info" "Done with initial debootstrap process"
 }
 
@@ -208,17 +208,6 @@ function CopyOverlay()
 	Print "Info" "Done applying overlay"
 }
 
-##
-## Function to append apt repos to the sources list
-##
-function AppendRepos()
-{
-	Print "Info" "Adding additional APT repositories"
-	echo "$MORE_REPOS" | sudo tee -a "${DEBOOTSTRAP}/etc/apt/sources.list"
-	sudo chroot "${DEBOOTSTRAP}" << EOF
-apt-get update
-EOF
-}
 
 #################### SCRIPT LOGIC #####################
 
@@ -263,9 +252,6 @@ if [ -e "${DEBOOTSTRAP}/debootstrap/debootstrap" ]; then
 	Print "Info" "Starting secondary debootstrap process for ${DISTRO}..."
 	RunDebootstrapSecondary
 fi
-
-# Append any extra apt repos before running chroot script
-AppendRepos
 
 # Check for an additional chroot script to run
 if (( ${#CHROOT_SCRIPT} > 0 )); then

@@ -42,7 +42,7 @@ function AddRepos()
 ##
 ## Function to install Node.js
 ##
-function installNode() {
+function InstallNode() {
     local NODE_TAR="node-v11.9.0-linux-armv6l.tar.xz"
     local NODE_UNZIP="node-v11.9.0-linux-armv6l"
     wget "https://nodejs.org/dist/v11.9.0/${NODE_TAR}"
@@ -64,6 +64,17 @@ function installNode() {
     Print "Done with Node.js"
 }
 
+##
+## Function to pull the non-free firmware from Raspbians github since the 'firmware-brcm80211' package is missing
+##    the required params txt file
+##
+function GetNonFreeFirmware()
+{
+    cd /etc/firmware/brcm/
+    wget https://raw.githubusercontent.com/RPi-Distro/firmware-nonfree/master/brcm/brcmfmac43430-sdio.txt
+    cd /
+}
+
 # Check for enabled en_US
 LOCALE=$(cat /etc/locale.gen | grep -x "en_US.UTF-8 UTF-8")
 if [ -z "${LOCALE}" ]; then
@@ -81,7 +92,10 @@ fi
 AddRepos
 
 # Install Node.js
-installNode
+InstallNode
+
+# Get the required firmware files
+GetNonFreeFirmware
 
 # Ensure everything wraps up
 sync 

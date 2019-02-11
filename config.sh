@@ -35,7 +35,7 @@ DEBOOTSTRAP="${BASE}/stretch"
 DEBOOTSTRAP_TAR="${DEBOOTSTRAP}-${ARCH}.tar.gz"
 
 # Additional packages to load into bootstrap
-ADDITIONAL_PACKAGES="locales,dirmngr,git,ca-certificates,apt-transport-https,nano,openssl,openssh-server,curl,xz-utils,wpasupplicant,gcc,g++,make"
+ADDITIONAL_PACKAGES="locales,dirmngr,git,ca-certificates,apt-transport-https,nano,openssl,openssh-server,curl,xz-utils,wpasupplicant,gcc,g++,make,firmware-brcm80211"
 
 # Set the debootstrap options; dont check gpg; include additional packages
 DEBOOTSTRAP_OPTIONS="--foreign --keyring=/etc/apt/trusted.gpg --include=${ADDITIONAL_PACKAGES}"

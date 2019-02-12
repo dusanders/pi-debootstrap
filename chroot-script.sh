@@ -65,14 +65,25 @@ function InstallNode() {
 }
 
 ##
-## Function to pull the non-free firmware from Raspbians github since the 'firmware-brcm80211' package is missing
-##    the required params txt file
+## Function to pull the non-free firmware from Raspbians github 
 ##
 function GetNonFreeFirmware()
 {
-    cd /etc/firmware/brcm/
-    wget https://raw.githubusercontent.com/RPi-Distro/firmware-nonfree/master/brcm/brcmfmac43430-sdio.txt
+    # Clone the firmware repo
+    Print "Cloning firmware..."
+    git clone https://github.com/RPi-Distro/firmware-nonfree
+    cd firmware-nonfree
+
+    # Copy firmware files into place
+    Print "Copy firmware"
+    mkdir -p /lib/firmware/
+    cp -a ./* /lib/firmware/
+    sync
+
+    # Clean up the cloned repo files
     cd /
+    Print "Clean up"
+    rm -rf firmware-nonfree
 }
 
 # Check for enabled en_US

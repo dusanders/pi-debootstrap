@@ -312,6 +312,13 @@ Print "Info" "Copy boot files to boot partition..."
 sudo cp -r "${BOOT_TMP}"/* "${BOOT_PARTITION_MOUNT}" || Exit "Failed to copy boot files"
 sudo sync
 
+# Copy overlay boot files to boot partition
+if [ -d "${TMP}/boot" ]; then
+	Print "Info" "Copy boot overlay files to boot partition..."
+	sudo cp -r "${TMP}/boot"/* "${BOOT_PARTITION_MOUNT}"
+	sudo sync
+fi
+
 # Copy over the rootfs
 Print "Info" "Copy rootfs..."
 sudo cp -a "${TMP}"/* "${ROOTFS_PARTITION_MOUNT}" || Exit "Failed to copy rootfs"

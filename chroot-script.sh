@@ -41,10 +41,29 @@ function AddRepos()
     apt-get update
 }
 
+function InstallChrome() 
+{
+    # Chrome apt repo
+    local chromeRepo="deb http://dl.google.com/linux/chrome/deb/ stable main"
+
+    # Add repo to apt sources
+    echo "$chromeRepo" | tee -a "/etc/apt/sources.list"
+
+    # Add apt key
+    wget -qO- https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+
+    # Update apt
+    apt-get update
+
+    # Install chrome
+    apt-get install --no-install-recommends google-chrome-stable
+}
+
 ##
 ## Function to install Node.js
 ##
-function InstallNode() {
+function InstallNode() 
+{
     local NODE_TAR="node-v11.9.0-linux-armv6l.tar.xz"
     local NODE_UNZIP="node-v11.9.0-linux-armv6l"
     wget "https://nodejs.org/dist/v11.9.0/${NODE_TAR}"
@@ -106,6 +125,9 @@ AddRepos
 
 # Install Node.js
 InstallNode
+
+# Install Chrome
+InstallChrome
 
 # Get the required firmware files
 GetNonFreeFirmware

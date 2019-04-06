@@ -1,0 +1,8 @@
+# Enable max USB current
+max_usb_current=1
+
+# Setup HDMI for WavShare 5in display
+hdmi_group=2
+hdmi_mode=87
+hdmi_cvt 800 480 60 6 0 0 0
+hdmi_drive=1

@@ -2,7 +2,9 @@
 
 #######################################################################
 ##	Script: chroot-script.sh
-##	Desc: Executed within a chroot environment to automate tasks
+##	Desc: Executed within a chroot environment to automate tasks.
+##          This script is executed within the chroot debootstrap environment
+##          to provide additional setup during the build process
 ##	Usage: ./chroot-script.sh
 #######################################################################
 

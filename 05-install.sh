@@ -317,6 +317,8 @@ if [ -d "${TMP}/boot" ]; then
 	Print "Info" "Copy boot overlay files to boot partition..."
 	sudo cp -r "${TMP}/boot"/* "${BOOT_PARTITION_MOUNT}"
 	sudo sync
+	# Remove files from boot overlay to keep rootfs clean
+	sudo rm -f "${TMP}/boot"/*
 fi
 
 # Copy over the rootfs

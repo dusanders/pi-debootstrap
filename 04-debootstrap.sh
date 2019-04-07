@@ -205,9 +205,7 @@ function CreateDebootstrap()
 function CopyOverlay()
 {
 	Print "Info" "Applying overlay..."
-	if [ ! -z $(ls ${OVERLAY_DIR}) ]; then
-		sudo cp -a "${OVERLAY_DIR}"/* "${DEBOOTSTRAP}" || Exit "Failed to copy overlay to: ${DEBOOTSTRAP}"
-	fi
+	sudo cp -a "${OVERLAY_DIR}"/* "${DEBOOTSTRAP}" || Exit "Failed to copy overlay to: ${DEBOOTSTRAP}"
 	Print "Info" "Done applying overlay"
 }
 

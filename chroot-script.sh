@@ -46,8 +46,8 @@ function AddRepos()
 ##
 function InstallNode() 
 {
-    local NODE_TAR="node-v11.9.0-linux-armv6l.tar.xz"
-    local NODE_UNZIP="node-v11.9.0-linux-armv6l"
+    local NODE_TAR="node-v11.9.0-linux-arm64.tar.xz"
+    local NODE_UNZIP="node-v11.9.0-linux-arm64"
     wget "https://nodejs.org/dist/v11.9.0/${NODE_TAR}"
     Print "Extract ${NODE_TAR}"
     tar -xf "${NODE_TAR}"

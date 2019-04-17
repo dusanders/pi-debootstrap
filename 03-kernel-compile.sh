@@ -43,6 +43,8 @@ function GetVars()
     COMPILE_PREFIX=$(./${CONFIG_SCRIPT} CROSS_COMPILE_PREFIX) || Exit "Failed to get cross compile prefix"
     BOOT_TMP=$(./${CONFIG_SCRIPT} BOOT_TMP) || Exit "Failed to get BOOT temp"
     MODULES_TMP=$(./${CONFIG_SCRIPT} MODULES_TMP) || Exit "Failed to get TMP directory"
+	KERNEL_IMAGE=$(./${CONFIG_SCRIPT} KERNEL_IMAGE) || Exit "Failed to get kernel image type"
+	KERNEL_OUTPUT=$(./${CONFIG_SCRIPT} KERNEL_OUTPUT) || Exit "Failed to get kernel output directory"
 }
 
 # Setup the variables
@@ -61,18 +63,26 @@ cd "${KERNEL_DEST}"
 # Ensure fresh start
 sudo make mrproper
 # Set the kernel to use
-KERNEL="${KERNEL_ARG}"
+#KERNEL="${KERNEL_ARG}"
 # Compile the defconfig
 make ARCH=${ARCH_TYPE} CROSS_COMPILE=${COMPILE_PREFIX} "${DEFCONFIG}"
 # Compile evertyhing
-sudo make -j${J_OPTION} ARCH=${ARCH_TYPE} CROSS_COMPILE=${COMPILE_PREFIX} zImage modules dtbs
+sudo make -j${J_OPTION} ARCH=${ARCH_TYPE} CROSS_COMPILE=${COMPILE_PREFIX} "${KERNEL_IMAGE}" modules dtbs
 # Install modules
 mkdir -p "${MODULES_TMP}"
 sudo make ARCH=${ARCH_TYPE} CROSS_COMPILE=${COMPILE_PREFIX} INSTALL_MOD_PATH="${MODULES_TMP}" modules_install
 
 # Copy boot files
 mkdir -p "${BOOT_TMP}/overlays"
-sudo cp arch/${ARCH_TYPE}/boot/zImage "${BOOT_TMP}/${KERNEL_ARG}.img"
-sudo cp arch/${ARCH_TYPE}/boot/dts/*.dtb "${BOOT_TMP}"
-sudo cp arch/${ARCH_TYPE}/boot/dts/overlays/*.dtb* "${BOOT_TMP}/overlays"
-sudo cp arch/${ARCH_TYPE}/boot/dts/overlays/README "${BOOT_TMP}/overlays"
+if [ "$ARCH_TYPE" == "arm64" ]; then
+	echo "Using $ARCH_TYPE"
+	sudo cp arch/${ARCH_TYPE}/boot/${KERNEL_IMAGE} "${BOOT_TMP}/${KERNEL_ARG}.img"
+	sudo cp arch/${ARCH_TYPE}/boot/dts/broadcom/*.dtb "${BOOT_TMP}"
+	sudo cp arch/${ARCH_TYPE}/boot/dts/overlays/*.dtb* "${BOOT_TMP}/overlays"
+	sudo cp arch/${ARCH_TYPE}/boot/dts/overlays/README "${BOOT_TMP}/overlays"
+else
+	sudo cp arch/${ARCH_TYPE}/boot/${KERNEL_IMAGE} "${BOOT_TMP}/${KERNEL_ARG}.img"
+	sudo cp arch/${ARCH_TYPE}/boot/dts/*.dtb "${BOOT_TMP}"
+	sudo cp arch/${ARCH_TYPE}/boot/dts/overlays/*.dtb* "${BOOT_TMP}/overlays"
+	sudo cp arch/${ARCH_TYPE}/boot/dts/overlays/README "${BOOT_TMP}/overlays"
+fi

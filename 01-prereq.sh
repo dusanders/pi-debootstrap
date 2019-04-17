@@ -24,8 +24,10 @@ function Print()
 
 Print "Info" "Installing prereq packages..."
 
-sudo apt-get install git bc bison flex libssl-dev
+sudo apt-get install git bc bison flex libssl-dev unzip
 sudo apt-get install debootstrap
 sudo apt-get install qemu-user-static
+sudo apt-get install build-essential
+sudo apt-get install gcc-aarch64-linux-gnu
 
 Print "Info" "Done gathering prereq packages"

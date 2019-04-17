@@ -26,7 +26,7 @@ PI2_ARCH="armhf"
 PI3_ARCH="arm64"
 
 # Arch to use
-ARCH="$PI_ARCH"
+ARCH="$PI3_ARCH"
 
 # Directory to place debootstrap rootfs in
 DEBOOTSTRAP="${BASE}/stretch"
@@ -35,10 +35,13 @@ DEBOOTSTRAP="${BASE}/stretch"
 DEBOOTSTRAP_TAR="${DEBOOTSTRAP}-${ARCH}.tar.gz"
 
 # Additional packages to load into bootstrap
-ADDITIONAL_PACKAGES="locales,dirmngr,git,ca-certificates,apt-transport-https,nano,openssl,openssh-server,curl,xz-utils,wpasupplicant,gcc,g++,make,xorg,openbox,midori"
+ADDITIONAL_PACKAGES="locales,dirmngr,git,ca-certificates,apt-transport-https,nano,openssl,openssh-server,curl,xz-utils,wpasupplicant,gcc,g++,make,xorg,openbox,chromium"
 
 # Set the debootstrap options; dont check gpg; include additional packages
-DEBOOTSTRAP_OPTIONS="--foreign --keyring=/etc/apt/trusted.gpg --include=${ADDITIONAL_PACKAGES}"
+PI_DEBOOTSTRAP_OPTIONS="--foreign --keyring=/etc/apt/trusted.gpg --include=${ADDITIONAL_PACKAGES}"
+PI2_DEBOOTSTRAP_OPTIONS="--foreign --include=${ADDITIONAL_PACKAGES}"
+
+DEBOOTSTRAP_OPTIONS="${PI2_DEBOOTSTRAP_OPTIONS}"
 
 # Package repository for Pi 1 & Zero
 PI1_REPO="http://mirrordirector.raspbian.org/raspbian"
@@ -47,7 +50,7 @@ PI1_REPO="http://mirrordirector.raspbian.org/raspbian"
 PI2_REPO="http://ftp.us.debian.org/debian"
 
 # Package repository  to use
-PACKAGE_REPO="${PI1_REPO}"
+PACKAGE_REPO="${PI2_REPO}"
 
 ########### INSTALL VALUES ###################
 
@@ -82,7 +85,7 @@ PI2_QEMU="qemu-arm-static"
 PI3_QEMU="qemu-aarch64-static"
 
 # Host's qemu binary file name
-QEMU_BINARY="$PI_QEMU"
+QEMU_BINARY="$PI3_QEMU"
 
 # Host's qemu binary containing path
 QEMU_HOST_PARENT="/usr/bin"
@@ -98,24 +101,40 @@ OVERLAY_DIR="${BASE}/overlay"
 # Kernel argument for Pi 1, Zero, Zero W, and Compute
 #   - specified: https://www.raspberrypi.org/documentation/linux/kernel/building.md
 PI1_ARG="kernel"
+PI1_KERNEL_IMAGE="zImage"
 PI1_DEFCONFIG="bcmrpi_defconfig"
+PI1_KERN_ARCH="arm"
 
-# Kernel argument for Pi 2, 3, 3+, Compute 3
+# Kernel argument for Pi 2
 #   - specified: https://www.raspberrypi.org/documentation/linux/kernel/building.md
-PI2="kernel7"
+PI2_ARG="kernel7"
+PI2_KERNEL_IMAGE="zImage"
 PI2_DEFCONFIG="bcm2709_defconfig"
+PI2_KERN_ARCH="arm"
+
+# Kernel argument for Pi 3, 3+
+PI3_ARG="kernel8"
+PI3_KERNEL_IMAGE="Image"
+PI3_DEFCONFIG="bcmrpi3_defconfig"
+PI3_KERN_ARCH="arm64"
 
 # Kernel argument to use
-KERNEL_ARG=$PI1_ARG
+KERNEL_ARG=$PI3_ARG
+
+# Kernel image
+KERNEL_IMAGE="${PI3_KERNEL_IMAGE}"
+
+# Kernel output directory
+KERNEL_OUTPUT="kernel-built"
 
 # Defconfig to use
-DEFCONFIG=$PI1_DEFCONFIG
+DEFCONFIG=$PI3_DEFCONFIG
 
 # Compiler 'j' option
 J_OPTION="4"
 
 # Arch type
-ARCH_TYPE="arm"
+ARCH_TYPE="${PI3_KERN_ARCH}"
 
 # Subdirectory for kernel/cross compile tools
 KERNEL_SOURCES="${BASE}/sources/"
@@ -125,7 +144,11 @@ CROSS_COMPILER_REPO_NAME="tools"
 CROSS_COMPILER_GIT="https://github.com/raspberrypi/${CROSS_COMPILER_REPO_NAME}.git"
 CROSS_COMPILER_GIT_DEPTH=1
 CROSS_COMPILER_DEST="${KERNEL_SOURCES}/${CROSS_COMPILER_REPO_NAME}"
-CROSS_COMPILE_PREFIX="${CROSS_COMPILER_DEST}/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf-"
+PI1_CROSS_COMPILE_PREFIX="${CROSS_COMPILER_DEST}/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf-"
+PI3_CROSS_COMPILE_PREFIX="aarch64-linux-gnu-";
+
+# Compiler cross tools prefix
+CROSS_COMPILE_PREFIX="${PI3_CROSS_COMPILE_PREFIX}"
 
 # Set the git values for the firmware
 FIRMWARE_REPO_NAME="firmware"
@@ -237,6 +260,14 @@ case ${REQUESTED_VALUE} in
 	;;
 "FIRMWARE_GIT_DEPTH")
 	echo "${FIRMWARE_GIT_DEPTH}"
+	exit 0
+	;;
+"KERNEL_OUTPUT")
+	echo "${KERNEL_OUTPUT}"
+	exit 0
+	;;
+"KERNEL_IMAGE")
+	echo "${KERNEL_IMAGE}"
 	exit 0
 	;;
 "KERNEL_SOURCES")
